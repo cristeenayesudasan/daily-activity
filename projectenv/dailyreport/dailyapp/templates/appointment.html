@@ -1,0 +1,89 @@
+{%load static%}
+<!DOCTYPE html>
+<!-- Created By CodingLab - www.codinglabweb.com -->
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8">
+    <!---<title> Responsive Registration Form | CodingLab </title>--->
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   </head>
+<body>
+  <div class="container">
+    <div class="title">Add Appointment Details</div>
+    <div class="content">
+      <form action="{% url 'save_appointment' %}" method="POST">
+        {%csrf_token%}
+        <div class="user-details">
+          <div class="input-box">
+            <span class="details">Customer Name</span>
+            <!-- <input type="text" placeholder="Enter customer name" required value=>  -->
+            <!-- <label>{{displaydta.emp_name}}</label>
+            <select name="cust_name" id="cust_name">
+              {% for i in displaydta %}
+                <option value="{{i.cust_name}}">{{i.cust_name}}</option>
+              {% endfor %}
+            </select> -->
+            
+          <select name="optionSelect" id="optionSelect">
+            <!-- <option>--select--</option> -->
+            {% for i in custo %}
+              <option value="{{i.id}}">{{i.cust_name}}</option>
+              {% endfor %}
+          </select>
+          
+          </div>
+          <div class="input-box" id="option-details" name="option-details">
+            <!-- <span class="details">Contact Number</span> -->
+            <input type="text" name="optionPhone" id="optionPhone">
+            <input type="text" name="optionEmail" id="optionEmail">
+            
+          </div>
+          <div class="input-box">
+            <span class="details">Scheduled Date</span>
+            <input type="date" name="scheduled_date" id="scheduled_date" required>
+          </div>
+          <div class="input-box">
+            <span class="details">Scheduled Time</span>
+            <input type="text" name="scheduled_time" id="scheduled_time" required>
+          </div>
+          <div class="input-box">
+            <span class="details">Purpose</span>
+            <input type="text" placeholder="Enter your purpose" required name="purpose" id="purpose">
+          </div>
+          <div class="input-box">
+            <!-- <span class="details">Empid</span> -->
+            <!-- <select name="empid" id="empid">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+          </select> -->
+          </div>
+        </div>
+        <div class="button">
+          <input type="submit" value="Add details">
+        </div>
+      </form>
+    </div>
+  </div>
+  <script>
+    const selectBox = document.getElementById('optionSelect');
+    const optionDetails = document.querySelector('#option-details');
+    selectBox.addEventListener('change', () => {
+      const selectedOptionId  = selectBox.value;
+      console.log(selectBox.value);
+      fetch('/option?q='+selectedOptionId)
+  .then(response => response.json())
+  .then(data => {
+    console.log(data.email);
+    const phoneElement = document.getElementById('optionPhone');
+    const emailElement = document.getElementById('optionEmail');
+    phoneElement.value = data.phn_num;
+    emailElement.value = data.email;
+  })
+  .catch(error => console.error(error));
+
+    });
+  </script>
+</body>
+</html>

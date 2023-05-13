@@ -1,0 +1,76 @@
+{%load static%}
+<!DOCTYPE html>
+<!-- Created By CodingLab - www.codinglabweb.com -->
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8">
+    <!---<title> Responsive Registration Form | CodingLab </title>--->
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   </head>
+<body>
+  <div class="container">
+    <div class="title">Domestic Customers Details</div>
+    <div class="content">
+      <form action="{% url 'save_domestic' %}" method="POST">
+        {%csrf_token%}
+        <div class="user-details">
+          <div class="input-box">
+            <span class="details">Customer Name</span>
+            <!-- <input type="text" placeholder="Enter customer name" required> -->
+            <select name="cname" id="cname">
+              {% for i in displaycust %}
+              <option value="{{i.id}}">{{i.cust_name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="input-box">
+            <span class="details">Contact Number</span>
+            <input type="text" placeholder="Enter customer number" value="{{displaycust.phn_num}}">
+          </div>
+          <div class="input-box">
+            <span class="details">Address for Communication</span>
+            <textarea rows="5" cols="25" name="add_for_comm" id="add_for_comm" value="{{displaycust.add_for_comm}}" ></textarea>
+          </div>
+          <div class="input-box">
+            <span class="details">Permanent Address</span>
+            <textarea rows="5" cols="30" name="paddress" id="paddress" required></textarea>
+          </div>
+          <div class="input-box">
+            <!-- <span class="details">Password</span>
+            <input type="text" placeholder="Enter your password" required> -->
+          </div>
+          <div class="input-box">
+            <!-- <span class="details">Confirm Password</span>
+            <input type="text" placeholder="Confirm your password" required> -->
+          </div>
+        </div>
+        <div class="gender-details">
+          <!-- <input type="radio" name="gender" id="dot-1">
+          <input type="radio" name="gender" id="dot-2">
+          <input type="radio" name="gender" id="dot-3">
+          <span class="gender-title">Gender</span>
+          <div class="category">
+            <label for="dot-1">
+            <span class="dot one"></span>
+            <span class="gender">Male</span>
+          </label>
+          <label for="dot-2">
+            <span class="dot two"></span>
+            <span class="gender">Female</span>
+          </label>
+          <label for="dot-3">
+            <span class="dot three"></span>
+            <span class="gender">Prefer not to say</span>
+            </label>
+          </div> -->
+        </div>
+        <div class="button">
+          <input type="submit" value="Save details">
+        </div>
+      </form>
+    </div>
+  </div>
+
+</body>
+</html>

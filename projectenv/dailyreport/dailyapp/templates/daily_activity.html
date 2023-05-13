@@ -1,0 +1,75 @@
+{%load static%}
+<!DOCTYPE html>
+<!-- Created By CodingLab - www.codinglabweb.com -->
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8">
+    <!---<title> Responsive Registration Form | CodingLab </title>--->
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   </head>
+<body>
+  <div class="container">
+    <div class="title">Daily Activity Report</div>
+    <div class="content">
+      <form action="{% url 'save_daily_activity' %}" method="POST">
+        {%csrf_token%}
+        <div class="user-details">
+          <div class="input-box">
+            <span class="details">Task Name</span>
+            <!-- <input type="text" placeholder="Enter your name" required> -->
+            <select name="taskname" id="taskname">
+              {% for i in gname %}
+                <option value="{{i.id}}">{{i.gname}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="input-box">
+            <span class="details">Date</span>
+            <span id="current-date"></span>
+          </div>
+          <div class="input-box">
+            <span class="details">Status</span>
+            <select name="status" id="status">
+              <option value="Completed">Completed</option>
+              <option value="In progress">In progress</option>
+              <option value="Not Completed">Not Completed</option>
+          </select>
+          </div>
+          <div class="input-box">
+            <span class="details">Remarks</span>
+            <input type="text" placeholder="" name="remarks" id="remarks" required>
+          </div>
+          <div class="input-box">
+            <!-- <span class="details">Empid</span>
+            <select name="empid" id="empid">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+          </select> -->
+          </div>
+          <div class="input-box">
+             
+          </div>
+        </div>
+        
+        <div class="button">
+          <input type="submit" value="submit">
+        </div>
+      </form>
+      <div>
+        {% if messages %}
+        {% for m in messages %}
+        <p style="color:rgb(121, 185, 48);">{{m}}</p>
+        {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <script>
+    // Display the current date in the HTML
+    var currentDate = new Date().toLocaleDateString();
+    document.getElementById("current-date").innerHTML = currentDate;
+  </script>
+</body>
+</html>

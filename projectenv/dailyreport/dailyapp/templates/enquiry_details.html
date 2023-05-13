@@ -1,0 +1,59 @@
+{%load static%}
+<!DOCTYPE html>
+<!-- Created By CodingLab - www.codinglabweb.com -->
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8">
+    <!---<title> Responsive Registration Form | CodingLab </title>--->
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   </head>
+<body>
+  <div class="container">
+    <div class="title">Add Customer Enquiry Details</div>
+    <div class="content">
+      <form method="POST" action="{% url 'save_enquiry' %}" >
+        {%csrf_token%}
+        <div class="user-details">
+          <div class="input-box">
+            <span class="details"> Name</span>
+            <input type="text" placeholder="Enter customer name" required name="cname" id="cname">
+          </div>
+          <div class="input-box">
+            <span class="details">Email Address</span>
+            <input type="text" placeholder="Enter customer email" required name="email" id="email">
+          </div>
+          <div class="input-box">
+            <span class="details">Contact Number</span>
+            <input type="text" placeholder="Enter customer contact" required name="contact" id="contact">
+          </div>
+          <div class="input-box">
+            <span class="details">Address for communication</span>
+            <!-- <input type="text" placeholder="Enter customer address" required> -->
+            <textarea placeholder="" required rows="5" cols="30" name="address" id="address"></textarea>
+          </div>
+          <div id="AdditionalEnquiry" class="input-box">
+            <span class="details">Additional Details(if any)</span>
+            <input type="text" name="additional" id="additional">
+          </div>
+          <div class="input-box">
+            <!-- <span class="details">Empid</span>
+            <select name="empid" id="empid">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+          </select> -->
+          </div>
+        </div>
+        <div class="gender-details">
+          
+        </div>
+        <div class="button">
+          <input type="submit" value="Add details">
+        </div>
+      </form>
+    </div>
+  </div>
+
+</body>
+</html>

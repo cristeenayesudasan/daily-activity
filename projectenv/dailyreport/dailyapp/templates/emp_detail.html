@@ -1,0 +1,82 @@
+{%load static%}
+<!DOCTYPE html>
+<!-- Created By CodingLab - www.codinglabweb.com -->
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8">
+    <!---<title> Responsive Registration Form | CodingLab </title>--->
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   </head>
+<body>
+  <div class="container">
+    <div class="title">Add Employee Details</div>
+    <div class="content">
+      <form action="{% url 'save_emp' %}" method="POST">
+        {%csrf_token%}
+        <div class="user-details">
+          <div class="input-box">
+            <span class="details">Employee Name</span>
+            <input type="text" placeholder="Enter employee name" required name="emp_name" id="emp_name">
+          </div>
+          <div class="input-box">
+            <span class="details">Employee Email</span>
+            <input type="text" placeholder="Enter employee email" required name="emp_email" id="emp_email">
+          </div>
+          <div class="input-box">
+            <span class="details">Department</span>
+            <!-- <input type="text" placeholder="Enter your email" required> -->
+            <select name="dept" id="dept">
+              {% for i in displaydept %}
+              <option value="{{i.id}}">{{i.dept_name}}</option>
+              {% endfor %}  
+            </select>
+          </div>
+          <div class="input-box">
+            <span class="details">Designation</span>
+            <!-- <input type="text" placeholder="Enter employee designation" required> -->
+            <select name="des" id="des">
+              {% for i in displaydes %}
+              <option value="{{i.id}}" >{{i.des_name}}</option>
+              {% endfor %}
+              
+          </select>
+          </div>
+          <div class="input-box">
+            <!-- <span class="details">Password</span>
+            <input type="text" placeholder="Enter your password" required> -->
+          </div>
+          <div class="input-box">
+            <!-- <span class="details">Confirm Password</span>
+            <input type="text" placeholder="Confirm your password" required> -->
+          </div>
+        </div>
+        <div class="gender-details">
+          <!-- <input type="radio" name="gender" id="dot-1">
+          <input type="radio" name="gender" id="dot-2">
+          <input type="radio" name="gender" id="dot-3">
+          <span class="gender-title">Gender</span>
+          <div class="category">
+            <label for="dot-1">
+            <span class="dot one"></span>
+            <span class="gender">Male</span>
+          </label>
+          <label for="dot-2">
+            <span class="dot two"></span>
+            <span class="gender">Female</span>
+          </label>
+          <label for="dot-3">
+            <span class="dot three"></span>
+            <span class="gender">Prefer not to say</span>
+            </label>
+          </div> -->
+        </div>
+        <div class="button">
+          <input type="submit" value="Add Details">
+        </div>
+      </form>
+    </div>
+  </div>
+
+</body>
+</html>

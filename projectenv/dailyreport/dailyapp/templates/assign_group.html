@@ -1,0 +1,53 @@
+{%load static%}
+<!DOCTYPE html>
+<!-- Created By CodingLab - www.codinglabweb.com -->
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8">
+    <!---<title> Responsive Registration Form | CodingLab </title>--->
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   </head>
+<body>
+  <div class="container">
+    <div class="title">Assign Group</div>
+    <div class="content">
+      <form action="{% url 'save_emp_grp' %}" method="POST">
+        {%csrf_token%}
+        <div class="user-details">
+          <div class="input-box">
+            <span class="details">Employee Name</span>
+            <select name="empid" id="empid">
+                <!-- <option>--select--</option> -->
+                {% for i in disemp %}
+                <option value="{{i.id}}">{{i.emp_name}}</option>
+                {% endfor %}
+            </select>
+          </div>
+          <div class="input-box" id="option-details" name="option-details">
+            <span class="details">Group </span>
+            <select name="grpid" id="grpid">
+                <!--<option>--select--</option> -->
+                {% for i in disgrp %}
+                  <option value="{{i.id}}">{{i.gname}}</option>
+                  {% endfor %}
+              </select>
+          </div>
+          
+        </div>
+        <div class="button">
+          <input type="submit" value="Add to Group">
+        </div>
+      </form>
+      <div>
+        {% if messages %}
+        {% for m in messages %}
+        <p style="color:rgb(121, 185, 48);">{{m}}</p>
+        {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  
+</body>
+</html>

@@ -1,0 +1,42 @@
+{%load static%}
+<!DOCTYPE html>
+<!-- Created By CodingLab - www.codinglabweb.com -->
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8">
+    <!---<title> Responsive Registration Form | CodingLab </title>--->
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   </head>
+<body>
+  <div class="container">
+    <div class="title">Create Department</div>
+    <div class="content">
+      <form action="{% url 'save_dept' %}" method="POST">
+        {%csrf_token%}
+        <div class="user-details">
+          <div class="input-box">
+            <span class="details">Department Name</span>
+            <input type="text" placeholder="Enter department name" id="dept_name" name="dept_name" required>
+          </div>
+          
+          <div class="input-box">
+             
+          </div>
+        </div>
+        
+        <div class="button">
+          <input type="submit" value="Add department">
+        </div>
+      </form>
+      <div>
+        {% if messages %}
+        {% for m in messages %}
+        <p style="color:rgb(121, 185, 48);">{{m}}</p>
+        {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</body>
+</html>
