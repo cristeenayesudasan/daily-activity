@@ -18,7 +18,7 @@
           <div class="input-box">
             <span class="details">Customer Name</span>
             <!-- <input type="text" placeholder="Enter customer name" required> -->
-            <select name="cname" id="cname">
+            <select name="optionSelect" id="optionSelect">
               {% for i in displaycust %}
               <option value="{{i.id}}">{{i.cust_name}}</option>
               {% endfor %}
@@ -26,51 +26,51 @@
           </div>
           <div class="input-box">
             <span class="details">Contact Number</span>
-            <input type="text" placeholder="Enter customer number" value="{{displaycust.phn_num}}">
-          </div>
-          <div class="input-box">
-            <span class="details">Address for Communication</span>
-            <textarea rows="5" cols="25" name="add_for_comm" id="add_for_comm" value="{{displaycust.add_for_comm}}" ></textarea>
+            <input type="text" id='optionPhone' readonly>
           </div>
           <div class="input-box">
             <span class="details">Permanent Address</span>
-            <textarea rows="5" cols="30" name="paddress" id="paddress" required></textarea>
+            <textarea rows="5" cols="73"  id="paddress" name="paddress"></textarea>
           </div>
+          
           <div class="input-box">
             <!-- <span class="details">Password</span>
             <input type="text" placeholder="Enter your password" required> -->
           </div>
           <div class="input-box">
-            <!-- <span class="details">Confirm Password</span>
-            <input type="text" placeholder="Confirm your password" required> -->
+            
           </div>
         </div>
         <div class="gender-details">
-          <!-- <input type="radio" name="gender" id="dot-1">
-          <input type="radio" name="gender" id="dot-2">
-          <input type="radio" name="gender" id="dot-3">
-          <span class="gender-title">Gender</span>
-          <div class="category">
-            <label for="dot-1">
-            <span class="dot one"></span>
-            <span class="gender">Male</span>
-          </label>
-          <label for="dot-2">
-            <span class="dot two"></span>
-            <span class="gender">Female</span>
-          </label>
-          <label for="dot-3">
-            <span class="dot three"></span>
-            <span class="gender">Prefer not to say</span>
-            </label>
-          </div> -->
+          
         </div>
         <div class="button">
           <input type="submit" value="Save details">
         </div>
       </form>
+      <div class="button">
+        <a href="{% url 'index' %}" style="text-decoration: none;">Home</a>
+      </div>
     </div>
   </div>
+  <script>
+    const selectBox = document.getElementById('optionSelect');
+    const optionDetails = document.querySelector('#option-details');
+    selectBox.addEventListener('change', () => {
+      const selectedOptionId  = selectBox.value;
+      console.log(selectBox.value);
+      fetch('/option?q='+selectedOptionId)
+  .then(response => response.json())
+  .then(data => {
+    console.log(data.phn_num);
+    const phoneElement = document.getElementById('optionPhone');
+    // const emailElement = document.getElementById('optionEmail');
+    phoneElement.value = data.phn_num;
+    // emailElement.value = data.email;
+  })
+  .catch(error => console.error(error));
 
+    });
+  </script>
 </body>
 </html>

@@ -1,0 +1,54 @@
+{%load static%}
+<!DOCTYPE html>
+<!-- Created By CodingLab - www.codinglabweb.com -->
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8">
+    <!---<title> Responsive Registration Form | CodingLab </title>--->
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   </head>
+<body>
+  <div class="container"> 
+    <div class="title">Request Status</div>
+    <br>
+        <div class="content">
+            <table border="2" width="90%">
+                <thead>
+                    <tr>
+                        <th>Resource</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in status_list %}
+                        <tr>
+                            <td>{{i.resource}}</td>
+                            {% if i.status == 1 %}
+                                <td>Pending</td>
+                            {% elif i.status == 2 %}
+                                <td>Approved</td>
+                            {% elif i.status == 3 %}
+                                <td>Rejected</td>
+                            {% endif %}   
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div>
+                {% if messages %}
+                {% for m in messages %}
+                <p style="color:rgb(121, 185, 48);">{{m}}</p>
+                {% endfor %}
+                {% endif %}
+              </div>
+              <div class="button">
+                <a href="{% url 'index' %}" style="text-decoration: none;">Home</a>
+              </div>
+        </div>
+    </div>
+    </div>
+    </div>
+  </div>
+</body>
+</html>

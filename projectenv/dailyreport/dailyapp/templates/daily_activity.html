@@ -15,12 +15,13 @@
       <form action="{% url 'save_daily_activity' %}" method="POST">
         {%csrf_token%}
         <div class="user-details">
+          <!-- <div>{{s}}</div> -->
           <div class="input-box">
             <span class="details">Task Name</span>
             <!-- <input type="text" placeholder="Enter your name" required> -->
             <select name="taskname" id="taskname">
-              {% for i in gname %}
-                <option value="{{i.id}}">{{i.gname}}</option>
+              {% for i in distask %}
+                <option value="{{i.task_id}}">{{i.task.t_name}}</option>
               {% endfor %}
             </select>
           </div>
@@ -63,6 +64,9 @@
         <p style="color:rgb(121, 185, 48);">{{m}}</p>
         {% endfor %}
         {% endif %}
+      </div>
+      <div class="button">
+        <a href="{% url 'index' %}" style="text-decoration: none;">Home</a>
       </div>
     </div>
   </div>

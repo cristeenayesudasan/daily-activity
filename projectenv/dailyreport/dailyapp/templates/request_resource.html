@@ -11,26 +11,26 @@
    </head>
 <body>
   <div class="container">
-    <div class="title">Create New Task</div>
+    <div class="title">Request Resource</div>
     <div class="content">
-      <form action="{% url 'save_task' %}" method="POST">
+      <form action="{% url 'save_request' %}" method="POST">
         {%csrf_token%}
         <div class="user-details">
           <div class="input-box">
-            <span class="details">Task Name</span>
-            <input type="text" placeholder="Enter task name" name="tname" id="tname" required>
+            <span class="details">Resource</span>
+            <textarea required rows="5" cols="30" name="res" id="res"></textarea>
+          </div>
+          <div class="input-box">
+            <span class="details">Details</span>
+            <textarea required rows="5" cols="30" name="desc" id="desc"></textarea>
           </div>
           <div class="input-box">
             <span class="details">Date</span>
-            <span id="current-date"></span>
+            <input type="date" name="date" id="date">
           </div>
           <div class="input-box">
-            <span class="details">Task Description</span>
-            <textarea  required rows="5" cols="72" name="tdesc" id="tdesc"></textarea>
-          </div>
-          <div class="input-box">
-             <span class="details"></span> 
-             
+            <span class="details">Time</span>
+            <input type="text" name="time" id="time">
           </div>
           <div class="input-box">
             <!-- <input type="text" placeholder="Enter your password" required> -->
@@ -42,7 +42,7 @@
         </div>
         
         <div class="button">
-          <input type="submit" value="Create">
+          <input type="submit" value="Request">
         </div>
       </form>
       <div>
@@ -57,10 +57,5 @@
       </div>
     </div>
   </div>
-  <script>
-    // Display the current date in the HTML
-    var currentDate = new Date().toLocaleDateString();
-    document.getElementById("current-date").innerHTML = currentDate;
-  </script>
 </body>
 </html>

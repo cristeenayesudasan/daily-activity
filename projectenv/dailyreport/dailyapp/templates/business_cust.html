@@ -12,7 +12,7 @@
   <div class="container">
     <div class="title">Business Customer Details</div>
     <div class="content">
-      <form action="{%url 'save_business' %}" method="POST">
+      <form action="{% url 'save_business' %}" method="POST">
         {%csrf_token%}
         <div class="user-details">
           <div class="input-box">
@@ -20,14 +20,14 @@
             <input type="text" placeholder="Enter your name" required> -->
             <span class="details">Customer Name</span>
             <select name="cname" id="cname">
-              <option value="customer1">customer1</option>
-              <option value="customer1">customer2</option>
-              <option value="customer1">customer3</option>
+              {% for i in displaycust %}
+              <option value="{{i.id}}">{{i.cust_name}}</option>
+              {% endfor %}
             </select>
           </div>
           <div class="input-box">
             <span class="details">Contact Number</span>
-            <input type="text"  >
+            <input type="text" id='optionPhone' readonly>
           </div>
           <div class="input-box">
             <span class="details">Company Name</span>
@@ -47,31 +47,42 @@
           </div>
         </div>
         <div class="gender-details">
-          <!-- <input type="radio" name="gender" id="dot-1">
-          <input type="radio" name="gender" id="dot-2">
-          <input type="radio" name="gender" id="dot-3">
-          <span class="gender-title">Gender</span>
-          <div class="category">
-            <label for="dot-1">
-            <span class="dot one"></span>
-            <span class="gender">Male</span>
-          </label>
-          <label for="dot-2">
-            <span class="dot two"></span>
-            <span class="gender">Female</span>
-          </label>
-          <label for="dot-3">
-            <span class="dot three"></span>
-            <span class="gender">Prefer not to say</span>
-            </label>
-          </div> -->
+          
         </div>
         <div class="button">
           <input type="submit" value="Register">
         </div>
       </form>
+      <div class="button">
+        <a href="{% url 'index' %}" style="text-decoration: none;">Home</a>
+      </div>
+      <div>
+        {% if messages %}
+        {% for m in messages %}
+        <p style="color:rgb(121, 185, 48);">{{m}}</p>
+        {% endfor %}
+        {% endif %}
+      </div>
     </div>
   </div>
+  <script>
+    const selectBox = document.getElementById('cname');
+    const optionDetails = document.querySelector('#option-details');
+    selectBox.addEventListener('change', () => {
+      const selectedOptionId  = selectBox.value;
+      console.log(selectBox.value);
+      fetch('/option?q='+selectedOptionId)
+  .then(response => response.json())
+  .then(data => {
+    console.log(data.phn_num);
+    const phoneElement = document.getElementById('optionPhone');
+    // const emailElement = document.getElementById('optionEmail');
+    phoneElement.value = data.phn_num;
+    // emailElement.value = data.email;
+  })
+  .catch(error => console.error(error));
 
+    });
+  </script>
 </body>
 </html>

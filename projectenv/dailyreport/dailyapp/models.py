@@ -13,11 +13,6 @@ class designation(models.Model):
     def __str__(self):
         return self.des_name
 
-class user_groups(models.Model):
-    gname = models.CharField(max_length=30)
-    def __str__(self):
-        return self.gname
-
 class employee_details(models.Model):
     emp_name = models.CharField(max_length=40)
     email = models.CharField(max_length=40)
@@ -34,18 +29,14 @@ class login(models.Model):
     def __str__(self):
         return self.user_name
 
-class emp_group(models.Model):
-    group  = models.ForeignKey(user_groups,on_delete = models.CASCADE, default=1)
-    employee = models.ForeignKey(employee_details, on_delete = models.CASCADE, default=1)
-    def __str__(self):
-        return self.group
+class resource_requests(models.Model):
+    resource = models.CharField(max_length=80)
+    details = models.TextField()
+    date = models.DateField()
+    time = models.CharField(max_length=80)
+    status = models.IntegerField(default=1)
+    requested_by = models.ForeignKey(employee_details, on_delete = models.CASCADE)
 
-class privileges(models.Model):
-    functionality = models.CharField(max_length=40)
-    status = models.BooleanField()
-    group = models.ForeignKey(user_groups,on_delete = models.CASCADE)
-    def __str__(self):
-        return self.functionality
 
 class enquiry(models.Model):
     emp_id = models.IntegerField(default=0)
@@ -69,14 +60,14 @@ class appointment_detail(models.Model):
 
 class domestic_cust_add(models.Model):
     enquiry = models.ForeignKey(enquiry,on_delete = models.CASCADE, default=1)
-    # cust_name = models.CharField(max_length=40)
+    added_by = models.IntegerField(default=0)
     p_address = models.TextField()
     def __str__(self):
-        return self.p_add
+        return self.p_address
 
 class business_cust_add(models.Model):
-    enquiry = models.ForeignKey(enquiry,on_delete = models.CASCADE, default=1)
-    #cust_name =models.CharField(max_length=40,default='name1')
+    benquiry = models.ForeignKey(enquiry,on_delete = models.CASCADE, default=1)
+    added_by = models.IntegerField(default=0)
     company_name = models.CharField(max_length=40)
     b_address = models.TextField()
     website_address = models.TextField()
@@ -91,13 +82,7 @@ class task_create(models.Model):
     def __str__(self):
         return self.t_name
 
-class admin_task_assign(models.Model):
-    admin_task = models.ForeignKey(task_create, on_delete = models.CASCADE, default=1)
-    assigned_to = models.ForeignKey(user_groups, on_delete = models.CASCADE, default=1)
-    start_date = models.DateField()
-    end_date = models.DateField()
-    def __str__(self):
-        return self.task
+
 
 class task_assigning(models.Model):
     task = models.ForeignKey(task_create, on_delete = models.CASCADE, default=1)
@@ -108,13 +93,6 @@ class task_assigning(models.Model):
     def __str__(self):
         return self.task
 
-class reminder_priority(models.Model):
-    task = models.ForeignKey(task_create, on_delete = models.CASCADE, default=1)
-    emp = models.ForeignKey(employee_details, on_delete = models.CASCADE, default=1)
-    rdate = models.DateField()
-    priority = models.IntegerField(default=0)
-    def __str__(self):
-        return self.task
 
 class notes(models.Model):
     created_by = models.IntegerField(default=0)
@@ -125,13 +103,13 @@ class notes(models.Model):
     def __str__(self):
         return self.emp
 
-class daily_activity(models.Model):
-    #emp = models.ForeignKey(employee_details, on_delete = models.CASCADE, default=1)
-    task = models.ForeignKey(task_create, on_delete = models.CASCADE, default=1)
+class dactivity(models.Model):
+    updated_emp = models.ForeignKey(employee_details, on_delete = models.CASCADE, default=1)
+    updated_emp_dept = models.IntegerField(default=0)
+    t = models.ForeignKey(task_create, on_delete = models.CASCADE, default=1)
     status = models.CharField(max_length=40)
-    ddate = models.DateField()
+    submitted_date = models.DateField()
     remarks = models.TextField(default='remarks')
-    emp_id = models.IntegerField(default=1)
     def __str__(self):
         return self.task
 

@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .models import *
-from dailyapp.models import notes,login,enquiry
+from dailyapp.models import notes,login,enquiry,dactivity
 from dailyapp.models import enquiry,appointment_detail,employee_details,domestic_cust_add,business_cust_add
 from django.http import HttpResponse
 from django.contrib import messages
@@ -9,11 +9,113 @@ from datetime import datetime
 from django.db import connection
 # Create your views here.
 
+def request_resource(request):
+    return render(request,'request_resource.html')
+
+def save_request(request):
+    if request.method=='POST':
+        s = request.session['sid']
+        robj = resource_requests()
+        robj.resource = request.POST.get('res')
+        robj.details = request.POST.get('desc')
+        robj.date = request.POST.get('date')
+        robj.time = request.POST.get('time')
+        robj.status = 1
+        robj.requested_by_id = s
+        robj.save()
+        messages.success(request, 'Request send!!')
+        return render(request,'request_resource.html')
+    else:
+        return render(request,'request_resource.html')
+
+def request_list(request):
+    # rlist = resource_requests.objects.filter(status=1).select_related('requested_by')
+    # return render(request,'request_list.html',{'rlist':rlist})
+    rlist = resource_requests.objects.filter(status=1)
+    employee_ids = rlist.values_list('requested_by', flat=True)
+    employees = employee_details.objects.filter(id__in=employee_ids)
+    employee_names = {employee.id: employee.emp_name for employee in employees}
+    return render(request, 'request_list.html', {'rlist': rlist, 'employee_names': employee_names})
+
+def rapprove(request,id):
+    appobj = resource_requests.objects.get(id=id)
+    appobj.status = 2
+    appobj.save()
+    messages.success(request, 'Request Approved!!')
+    rlist = resource_requests.objects.filter(status=1)
+    employee_ids = rlist.values_list('requested_by', flat=True)
+    employees = employee_details.objects.filter(id__in=employee_ids)
+    employee_names = {employee.id: employee.emp_name for employee in employees}
+    return render(request, 'request_list.html', {'rlist': rlist, 'employee_names': employee_names})
+    # return render(request,'request_list.html')
+
+def rreject(request,id):
+    appobj = resource_requests.objects.get(id=id)
+    appobj.status = 3
+    appobj.save()
+    messages.success(request, 'Request Rejected!!')
+    rlist = resource_requests.objects.filter(status=1)
+    employee_ids = rlist.values_list('requested_by', flat=True)
+    employees = employee_details.objects.filter(id__in=employee_ids)
+    employee_names = {employee.id: employee.emp_name for employee in employees}
+    return render(request, 'request_list.html', {'rlist': rlist, 'employee_names': employee_names})
+    # return render(request,'request_list.html')
+
+def view_rstatus(request):
+    s = request.session['sid']
+    status_list = resource_requests.objects.filter(requested_by=s)
+    return render(request,'view_status.html',{'status_list':status_list})
+
+def view_cust_details(request):
+    s = request.session['sid']
+    empobj = employee_details.objects.get(id=s)
+    desid = empobj.designation_id
+    depid = empobj.department_id
+    desobj = designation.objects.get(id=desid)
+    desname = desobj.des_name
+    if desname == 'Manager':
+        # bcust_details = business_cust_add.objects.all().select_related('benquiry')
+        # dcust_details = domestic_cust_add.objects.all().select_related('enquiry')
+        bcust_details = business_cust_add.objects.filter(benquiry__emp_id__in=employee_details.objects.filter(department_id=depid).values('id')).select_related('benquiry')
+        dcust_details = domestic_cust_add.objects.filter(enquiry__emp_id__in=employee_details.objects.filter(department_id=depid).values('id')).select_related('enquiry')
+        context ={
+            'bcust_details':bcust_details,
+            'dcust_details':dcust_details,
+        }
+        return render(request,'view_cust_details.html',context)
+    elif desname == 'Employee':
+        # bcust_details = business_cust_add.objects.filter(emp_id=s).select_related('benquiry')
+        # dcust_details = domestic_cust_add.objects.filter(emp_id=s).select_related('enquiry')
+        enq_ids = enquiry.objects.filter(emp_id=s).values_list('id', flat=True)
+        bcust_details = business_cust_add.objects.filter(benquiry_id__in=enq_ids).select_related('benquiry')
+        dcust_details = domestic_cust_add.objects.filter(enquiry_id__in=enq_ids).select_related('enquiry')
+
+        context ={
+            'bcust_details':bcust_details,
+            'dcust_details':dcust_details,
+        }
+        return render(request,'view_cust_details.html',context)
+
+def view_app(request):
+    s = request.session['sid']
+    disapp = appointment_detail.objects.filter(emp_id =s)
+    return render(request,'view_app.html',{'disapp':disapp})
+
 def admin_page(request):
-    return render(request,'admin.html')
+    deptobj = department.objects.all()
+    desobj = designation.objects.all()
+    contact = {
+        'deptobj':deptobj,
+        'desobj':desobj,
+    }
+    return render(request,'admin.html',context)
 
 def index(request):
-    return render(request,'index.html',{})
+    sid = request.session['sid']
+    lobj = login.objects.get(employee_id=sid)
+    desid = lobj.des_id
+    desobj = designation.objects.get(id=desid)
+    return render(request,'index.html',{'desobj':desobj})
 
 def change_pwd(request):
     s = request.session['sid']
@@ -87,38 +189,43 @@ def save_login(request):
         pwd = request.POST.get('pwd')
         tempobj = employee_details.objects.get(id=empid)
         i = tempobj.designation_id
-        logobj = login()
-        logobj.user_name = uname
-        logobj.password = pwd
-        logobj.des_id = i
-        logobj.employee_id = empid
-        logobj.save()
-        messages.success(request, 'Credentials Added!!')
-        return render(request,'add_credentials.html')
+        if login.objects.filter(user_name=uname).exists():
+            messages.warning(request, 'Username already taken!!')
+            return render(request,'add_credentials.html')
+        else:
+            logobj = login()
+            logobj.user_name = uname
+            logobj.password = pwd
+            logobj.des_id = i
+            logobj.employee_id = empid
+            logobj.save()
+            messages.success(request, 'Credentials Added!!')
+            return render(request,'add_credentials.html')
     else:
         return render(request,'add_credentials.html')
 
+def view_status(request):
+    dtask = dactivity.objects.all().select_related('t', 'updated_emp')
+    return render(request,'view_tstatus.html',{'dtask':dtask})
 
 def task(request):
     s = request.session['sid']
     empobj = employee_details.objects.get(id=s)
     desid = empobj.designation_id
+    dep_id = empobj.department_id
     desobj = designation.objects.get(id=desid)
-    desname = desobj.des_name
-    if desname == 'Manager':
-        displaytask = task_create.objects.filter(created_by=s)
-        context = {
-            'desobj':desobj,
-            'displaytask':displaytask
-        }
-        return render(request,'task.html',context)
-    elif desname == 'Employee':
-        t = task_assigning.objects.filter(task_assigned_to_id=s).select_related('task')
-        tcontext = {
-            'desobj':desobj,
-            't':t
-        }
-        return render(request,'task.html',tcontext)
+    displaytask = task_create.objects.filter(created_by=s)
+    viewtask = task_assigning.objects.filter(task_assigned_to_id=s).select_related('task')
+    # dtask = dactivity.objects.select_related('t', 'updated_emp').all()
+    dtask = dactivity.objects.filter(updated_emp_dept=dep_id).select_related('t', 'updated_emp')
+    context = {
+        'desobj':desobj,
+        'displaytask':displaytask,
+        'viewtask':viewtask,
+        'dtask':dtask,
+    }
+    return render(request,'task.html',context)
+        
 
 def create_user_group(request):
     return render(request,'create_groups.html')
@@ -166,15 +273,18 @@ def assign_task(request):
     }
     return render(request,'assign_task.html',context)
 
-def dactivity(request):
+def d_activity(request):
     s = request.session['sid']
     #distask = task_create.objects.filter(task_assigned_to_id=s).select_related('task')
-    gid = emp_group.objects.filter(employee_id=s)
-    for i in gid:
-        gdata = i
-        gname = user_groups.objects.get(id=gdata.group_id)
-    # admin_queryset = task_create.objects.get(admin_task_assigned_to_id=g).select_related('admin_task')
-    return render(request,'daily_activity.html',{'gname':gname})
+    distask = task_assigning.objects.filter(task_assigned_to_id = s).select_related('task')
+    dtemp = employee_details.objects.get(id=s)
+    did = dtemp.department_id
+    context ={
+        'distask':distask,
+        'did':did,
+        's':s,
+    }
+    return render(request,'daily_activity.html',context)
 
 def createnote(request):
     return render(request,'create_note.html')
@@ -187,8 +297,8 @@ def test(request):
     return render(request,'test.html')
 
 def appointment_details(request):
-        custo = enquiry.objects.all()
         s = request.session['sid']
+        custo = enquiry.objects.filter(emp_id=s)
         return render(request,'appointment.html',{'custo':custo})
 
 #ajax
@@ -197,7 +307,6 @@ def option_detail_ajax(request):
     option = enquiry.objects.get(id=q)
     data = {
         'phn_num': option.phn_num,
-        'email': option.email,
     }   
     return JsonResponse(data)
 
@@ -212,11 +321,17 @@ def emp_details(request):
     # return render(request,'emp_detail.html')
 
 def domestic_customer(request):
-    displaycust = enquiry.objects.all()
+    bobj = business_cust_add.objects.all()
+    benquiry_ids = [obj.benquiry.id for obj in bobj]
+    displaycust = enquiry.objects.exclude(id__in=benquiry_ids)
+    # displaycust = enquiry.objects.exclude(id=bobj.benquiry)
     return render(request,'domestic_cust.html',{'displaycust':displaycust})
 
 def business_customer(request):
-    return render(request,'business_cust.html')
+    dobj = domestic_cust_add.objects.all()
+    enquiry_ids = [obj.enquiry.id for obj in dobj]
+    displaycust = enquiry.objects.exclude(id__in=enquiry_ids)
+    return render(request,'business_cust.html',{'displaycust':displaycust})
 
 def user_login(request):
     if request.method == 'POST':
@@ -228,7 +343,15 @@ def user_login(request):
                 if aobj.password == password:
                     request.session['sid'] = aobj.id
                     sid = request.session['sid']
-                    return render(request,'admin.html')
+                    departobj = department.objects.all()
+                    desigobj = designation.objects.all()
+                    eobj = employee_details.objects.all().select_related('department')
+                    context = {
+                        'departobj':departobj,
+                        'desigobj':desigobj,
+                        'eobj':eobj,
+                    }
+                    return render(request,'admin.html',context)
                 else:
                     messages.error(request, 'Invalid username or password')
                     return render(request,'login.html')
@@ -240,7 +363,12 @@ def user_login(request):
                         sid = request.session['sid']
                         desid = lobj.des_id
                         desobj = designation.objects.get(id=desid)
-                        return render(request,'index.html',{'desobj':desobj})
+                        tobj = employee_details.objects.get(id=sid)
+                        context={
+                            'desobj':desobj,
+                            'tobj':tobj,
+                        }
+                        return render(request,'index.html',context)
                     else:
                         messages.error(request, 'Invalid username or password')
                         return render(request,'login.html')
@@ -335,26 +463,28 @@ def save_enquiry(request):
         add_for_comm = request.POST.get('address')
         details = request.POST.get('additional')
         employee_id = request.session['sid']
-
-        acc.cust_name = cust_name
-        acc.email = email
-        acc.phn_num = phn_num
-        acc.add_for_comm = add_for_comm
-        acc.details = details
-        acc.emp_id = employee_id
-        acc.save()
-        return HttpResponse('Details saved!!')
+        if enquiry.objects.filter(email=email).exists():
+            messages.warning(request, 'email already exists!!')
+            return render(request,'enquiry_details.html')
+        else:
+            acc.cust_name = cust_name
+            acc.email = email
+            acc.phn_num = phn_num
+            acc.add_for_comm = add_for_comm
+            acc.details = details
+            acc.emp_id = employee_id
+            acc.save()
+            return HttpResponse('Details saved!!')
     else:
         return render(request, 'enquiry_details.html')
 
 def save_appointment(request):
     if request.method == 'POST':
-        c_name = request.POST.get('option-select')
+        c_name = request.POST.get('optionSelect')
         sdate = request.POST.get('scheduled_date')
         stime = request.POST.get('scheduled_time')
         p = request.POST.get('purpose')
-        e_id = request.session['sid']
-
+        e_id = request.session['sid']       
         obj2 = appointment_detail()
         obj2.cust_name = c_name
         obj2.scheduled_date = sdate
@@ -375,36 +505,42 @@ def save_emp(request):
         designation = request.POST.get('des')
         deptint = int(department)
         desint = int(designation)
-        obj3.emp_name = emp_name
-        obj3.email = email
-        obj3.department_id = deptint
-        obj3.designation_id = desint
-        obj3.save()
-        return HttpResponse('details Added')
+        if employee_details.objects.filter(email=email).exists():
+            messages.warning(request, 'email already exists!!')
+            return render(request,'emp_detail.html')
+        else:
+            obj3.emp_name = emp_name
+            obj3.email = email
+            obj3.department_id = deptint
+            obj3.designation_id = desint
+            obj3.save()
+            return HttpResponse('details Added')
     else:
         return render(request,'emp_detail.html')
 
 def save_domestic(request):
     if request.method == 'POST':
-        c_name = request.POST.get('cname')
-        p_address = request.POST.get('paddress')
         ob = domestic_cust_add()
-        ob.cust_name = c_name
-        ob.p_add = p_address
+        ob.enquiry_id = request.POST.get('optionSelect')
+        ob.added_by = request.session['sid']
+        ob.p_address = request.POST.get('paddress')
         ob.save()
         return HttpResponse('details Added')
     else:
         return render(request,'domestic_cust.html')
 
+
 def save_business(request):
     if request.method == 'POST':
         obj4 = business_cust_add()
-        obj4.cust_name = request.POST.get('cname')
         obj4.company_name = request.POST.get('company')
         obj4.website_address = request.POST.get('website')
         obj4.b_address = request.POST.get('baddress')
+        obj4.benquiry_id = request.POST.get('cname')
+        obj4.added_by = request.session['sid']
         obj4.save()
-        return HttpResponse('Details saved!!')
+        messages.success(request, 'Details added!!')
+        return render(request, 'business_cust.html')
     else:
         return render(request, 'business_cust.html')
 
@@ -421,18 +557,26 @@ def save_task(request):
     else:
         return render(request, 'create_task.html')
 
+
 def save_daily_activity(request):
     if request.method == 'POST':
-        obj7 = daily_activity()
+        s = request.session['sid']
+        empobj = employee_details.objects.get(id=s)
+        d_id = empobj.department_id
+        obj7 = dactivity()
         obj7.status = request.POST.get('status')
-        obj7.ddate = datetime.now().date()
-        obj7.remaks = request.POST.get('remarks')
-        obj7.emp_id = request.session['sid']
-        obj7.task_id = request.POST.get('taskname')
+        obj7.submitted_date = datetime.now().date()
+        obj7.remarks = request.POST.get('remarks')
+        taskname = request.POST.get('taskname')
+        obj7.t_id = int(taskname)
+        obj7.updated_emp_id = request.session['sid']
+        obj7.updated_emp_dept = d_id
         obj7.save()
         messages.success(request, 'Daily report submitted!!')
+        return render(request, 'daily_activity.html')
     else:
         return render(request, 'daily_activity.html')
+
 
 def lgout(request):
         request.session.flush()

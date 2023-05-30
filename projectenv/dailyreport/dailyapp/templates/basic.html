@@ -1,33 +1,60 @@
 {%load static%}
 
 <!-- ***** Header Area Start ***** -->
-<header class="header-area header-sticky wow slideInDown" data-wow-duration="0.75s" data-wow-delay="0s">
-  <div class="container">
+<header
+  class="header-area header-sticky wow slideInDown"
+  data-wow-duration="0.75s"
+  data-wow-delay="0s"
+>
+  <div class="container" style="margin-left: -20px;">
     <div class="row">
       <div class="col-12">
         <nav class="main-nav">
-          <!-- ***** Logo Start ***** -->
-          <!-- <a href="index.html">
-              <img src="https://t4.ftcdn.net/jpg/04/43/11/25/360_F_443112508_yYeF5kptk2P6wDyt2Biw9WUDvpmI9Eav.jpg" width='2px' height="120px"/>
-            </a> -->
-          <!-- ***** Logo End ***** -->
-          <!-- ***** Menu Start ***** -->
           <ul class="nav">
-            <!-- <li><a href="index.html">
-                <img class="logoImage" src="https://t4.ftcdn.net/jpg/04/43/11/25/360_F_443112508_yYeF5kptk2P6wDyt2Biw9WUDvpmI9Eav.jpg"
-                  width='2px' height="100px" style="margin-top: -20px; margin-left: -90px;" />
-              </a></li> -->
-            <li><a href="{% url 'change_pwd' %}">Change Password</a></li>
+            <div class="dropdown">
+              <button
+                class="btn btn-secondary dropdown-toggle"
+                type="button"
+                id="dropdownMenuButton"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+                style="background: white;color: black;"
+              >
+                profile settings
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                
+                <a class="dropdown-item" href="{% url 'change_pwd' %}">Reset Password</a>
+              </div>
+            </div>
             <li><a href="{% url 'index' %}" class="active">Home</a></li>
-            <li><a href="{% url 'note' %}">Notes</a></li>
             <li><a href="{% url 'task' %}">Tasks</a></li>
-            <li><a href="{% url 'dactivity' %}">Daily Activity</a></li>
-            <li><a href="#"><img src="{% static 'assets/images/bell_icon.png'  %}" width="60"></a></li>
+            <li><a href="{% url 'd_activity' %}">Daily Activity</a></li>
+            <li><a href="{% url 'request_resource' %}">Request Resource</a></li>
+            <li><a href="{% url 'note' %}">Notes</a></li>
+            <!-- <li>
+              <a
+                href=""
+                style="
+                  font-size: 20px;
+                  background-color: white;
+                  border-radius: 70%;
+                  padding: 7px;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                "
+                >&#x1F514;</a
+              >
+            </li> -->
             <li>
-              <div class="main-white-button"><a href="{% url 'lgout' %}">Logout</a></div>
+              <div class="main-white-button">
+                <a href="{% url 'lgout' %}">Logout</a>
+              </div>
             </li>
           </ul>
-          <a class='menu-trigger'>
+          <a class="menu-trigger">
             <span>Menu</span>
           </a>
           <!-- ***** Menu End ***** -->
@@ -38,9 +65,7 @@
 </header>
 <!-- ***** Header Area End ***** -->
 
-{% block content %}
-
-{% endblock content %}
+{% block content %} {% endblock content %}
 
 <footer>
   <div class="container">
@@ -50,9 +75,19 @@
           <!-- <div class="logo">
             <img src="{% static 'assets/images/black-logo.png' %}" alt="Plot Listing">
           </div> -->
-          <p>Track your time effortlessly <a rel="nofollow" href="https://templatemo.com/tm-564-plot-listing"
-              target="_parent"></a>  <a rel="nofollow"
-              href="https://www.paypal.me/templatemo" target="_blank"></a> </p>
+          <p>
+            Track your time effortlessly
+            <a
+              rel="nofollow"
+              href="https://templatemo.com/tm-564-plot-listing"
+              target="_parent"
+            ></a>
+            <a
+              rel="nofollow"
+              href="https://www.paypal.me/templatemo"
+              target="_blank"
+            ></a>
+          </p>
         </div>
       </div>
       <div class="col-lg-4">
@@ -94,12 +129,33 @@
       </div>
       <div class="col-lg-12">
         <div class="sub-footer">
-          <p>Copyright © 2021 Plot Listing Co., Ltd. All Rights Reserved.
-            <br>
-             <a rel="nofollow" href="https://templatemo.com" title="CSS Templates"></a>
-          </p>
+          <!-- <p>
+            Copyright © 2021 Plot Listing Co., Ltd. All Rights Reserved.
+            <br />
+            <a
+              rel="nofollow"
+              href="https://templatemo.com"
+              title="CSS Templates"
+            ></a>
+          </p> -->
         </div>
       </div>
     </div>
   </div>
 </footer>
+
+<script>
+  var dropdowns = document.querySelectorAll(".dropdown");
+  dropdowns.forEach(function (dropdown) {
+    var dropdownToggle = dropdown.querySelector('[data-toggle="dropdown"]');
+    var dropdownMenu = dropdown.querySelector(".dropdown-menu");
+
+    dropdownToggle.addEventListener("click", function () {
+      if (dropdownMenu.classList.contains("show")) {
+        dropdownMenu.classList.remove("show");
+      } else {
+        dropdownMenu.classList.add("show");
+      }
+    });
+  });
+</script>

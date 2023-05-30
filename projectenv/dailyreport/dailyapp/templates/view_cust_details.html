@@ -1,0 +1,164 @@
+{%load static%}
+<!DOCTYPE html>
+<!-- Created By CodingLab - www.codinglabweb.com -->
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8">
+    <!---<title> Responsive Registration Form | CodingLab </title>--->
+    <!-- <link rel="stylesheet" href="{% static 'assets/css/style.css' %}"> -->
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <style>
+        body{
+            height: 100vh;
+ 
+  padding: 10px;
+  background: linear-gradient(153deg, #101111, #40ad8d);
+        }
+        table{
+            justify-content: center;
+  align-items: center;
+ 
+            max-width: 1200px;
+    width: 100%;
+    background-color: #fff;
+    /* padding: 25px 30px; */
+    border-radius: 5px;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+}
+.container{
+  max-width: 1200px;
+  width: 100%;
+  background-color: #fff;
+  padding: 25px 30px;
+  border-radius: 5px;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+} 
+.container .title{
+  font-size: 25px;
+  font-weight: 500;
+  position: relative;
+}
+.container .title::before{
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 30px;
+  border-radius: 5px;
+  background: linear-gradient(135deg, #ffea00, #0ca325);
+}
+.content form .user-details{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 20px 0 12px 0;
+}
+ .sub{
+    margin-top: 42px;
+ }   
+ .main{
+    margin-top: 125px;
+ }    
+     </style>
+   </head>
+<body >
+    <!-- <div class="row"> 
+  <div class="container"> -->
+
+    <!-- <div class="col-md-6"> -->
+    <!-- 
+    <br>
+        <div class="content"> -->
+            <!-- <p>{{bcust_details}}</p> -->
+            
+        <!-- </div>
+    </div>
+    </div> -->
+    <div class="main">
+    <div class="container">
+    <div class="row">
+        <div class="col-md-6" >
+            <div class="title"><b>Business Customers</b></div>
+            <br>
+            <table border="2">
+                <thead>
+                    <tr>
+                        <th>Customer Name</th>
+                        <th>Email</th>
+                        <th>Contact Number</th>
+                        <th>Address</th>
+                        <th>Company Name</th>
+                        <th>Business Address</th>
+                        <th>Website Address</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in bcust_details %}
+                        <tr>
+                            <td>{{i.benquiry.cust_name}}</td>
+                            <td>{{i.benquiry.email}}</td>
+                            <td>{{i.benquiry.phn_num}}</td>
+                            <td>{{i.benquiry.add_for_comm}}</td>
+                            <td>{{i.company_name}}</td>
+                            <td>{{i.b_address}}</td>
+                            <td>{{i.website_address}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+    <div class="container sub">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="title"><b>Domestic Customers</b></div>
+    <br>
+            <table border="2">
+                <thead>
+                    <tr>
+                        <th>Customer Name</th>
+                        <th>Email</th>
+                        <th>Contact Number</th>
+                        <th>Address</th>
+                        <th>Permanent Address</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in dcust_details %}
+                        <tr>
+                            <td>{{i.enquiry.cust_name}}</td>
+                            <td>{{i.enquiry.email}}</td>
+                            <td>{{i.enquiry.phn_num}}</td>
+                            <td>{{i.enquiry.add_for_comm}}</td>
+                            <td>{{i.p_address}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</div>
+    <!-- </div> -->
+    <!-- <br>
+    <div class="container">
+    <div class="row"> -->
+        <!-- &nbsp;  -->
+        <!-- <div class="col-md-6"> -->
+  <!-- next div -->
+  <!-- <div class="container "> -->
+    
+    <!-- <div class="title">Domestic Customers</div>
+    <br>
+        <div class="content">
+           
+        </div>
+   
+    </div>
+    </div> -->
+    <!-- </div> -->
+    
+</body>
+</html>

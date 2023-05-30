@@ -9,7 +9,9 @@
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
    </head>
 <body>
+  
   <div class="container">
+    
     <div class="title">Add Appointment Details</div>
     <div class="content">
       <form action="{% url 'save_appointment' %}" method="POST">
@@ -17,27 +19,15 @@
         <div class="user-details">
           <div class="input-box">
             <span class="details">Customer Name</span>
-            <!-- <input type="text" placeholder="Enter customer name" required value=>  -->
-            <!-- <label>{{displaydta.emp_name}}</label>
-            <select name="cust_name" id="cust_name">
-              {% for i in displaydta %}
-                <option value="{{i.cust_name}}">{{i.cust_name}}</option>
+            <select name="optionSelect" id="optionSelect">
+              {% for i in custo %}
+                <option value="{{i.id}}">{{i.cust_name}}</option>
               {% endfor %}
-            </select> -->
-            
-          <select name="optionSelect" id="optionSelect">
-            <!-- <option>--select--</option> -->
-            {% for i in custo %}
-              <option value="{{i.id}}">{{i.cust_name}}</option>
-              {% endfor %}
-          </select>
-          
+            </select>
           </div>
           <div class="input-box" id="option-details" name="option-details">
-            <!-- <span class="details">Contact Number</span> -->
-            <input type="text" name="optionPhone" id="optionPhone">
-            <input type="text" name="optionEmail" id="optionEmail">
-            
+            <span class="details">Contact Number</span>
+            <input type="text" name="optionPhone" id="optionPhone" readonly> 
           </div>
           <div class="input-box">
             <span class="details">Scheduled Date</span>
@@ -64,6 +54,9 @@
           <input type="submit" value="Add details">
         </div>
       </form>
+      <div class="button">
+        <a href="{% url 'index' %}" style="text-decoration: none;">Home</a>
+      </div>
     </div>
   </div>
   <script>
@@ -75,11 +68,11 @@
       fetch('/option?q='+selectedOptionId)
   .then(response => response.json())
   .then(data => {
-    console.log(data.email);
+    console.log(data.phn_num);
     const phoneElement = document.getElementById('optionPhone');
-    const emailElement = document.getElementById('optionEmail');
+    // const emailElement = document.getElementById('optionEmail');
     phoneElement.value = data.phn_num;
-    emailElement.value = data.email;
+    // emailElement.value = data.email;
   })
   .catch(error => console.error(error));
 

@@ -1,0 +1,44 @@
+{%load static%}
+<!DOCTYPE html>
+<!-- Created By CodingLab - www.codinglabweb.com -->
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8">
+    <!---<title> Responsive Registration Form | CodingLab </title>--->
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   </head>
+<body>
+  <div class="container"> 
+    <div class="title">Task Status</div>
+    <br>
+        <div class="content">
+            <table border="2">
+                <thead>
+                    <tr>
+                        <th>Task Name</th>
+                        <th>Updated Date</th>
+                        <th>Status</th>
+                        <th>Remarks</th>
+                        <th>Updated by</th>
+                      </tr>
+                </thead>
+                    <tbody>
+                        {% for j in dtask %}
+                          <tr>
+                            <td>{{ j.t.t_name }}</td>
+                            <td>{{ j.submitted_date }}</td>
+                            <td>{{ j.status }}</td>
+                            <td>{{ j.remarks }}</td>
+                            <td>{{j.updated_emp.emp_name}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+    </div>
+  </div>
+</body>
+</html>

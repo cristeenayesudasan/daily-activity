@@ -1,0 +1,47 @@
+{%load static%}
+<!DOCTYPE html>
+<!-- Created By CodingLab - www.codinglabweb.com -->
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8">
+    <!---<title> Responsive Registration Form | CodingLab </title>--->
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   </head>
+<body>
+  <div class="container">
+<div class="row">  
+    <div class="title">Appointment Details</div>
+    <br>
+        <div class="content">
+            <table border="2">
+                <thead>
+                    <tr>
+                        <th>Customer Name</th>
+                        <th>Scheduled date</th>
+                        <th>Scheduled time</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in disapp %}
+                        <tr>
+                            <td>{{i.cust_name}}</td>
+                            <td>{{i.scheduled_date}}</td>
+                            <td>{{i.scheduled_time}}</td>
+                            <td>{{i.purpose}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="button">
+                <a href="{% url 'index' %}" style="text-decoration: none;">Home</a>
+              </div>
+        </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    
+</body>
+</html>

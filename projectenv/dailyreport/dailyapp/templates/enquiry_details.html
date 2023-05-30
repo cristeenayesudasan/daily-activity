@@ -10,6 +10,7 @@
    </head>
 <body>
   <div class="container">
+    
     <div class="title">Add Customer Enquiry Details</div>
     <div class="content">
       <form method="POST" action="{% url 'save_enquiry' %}" >
@@ -52,6 +53,10 @@
           <input type="submit" value="Add details">
         </div>
       </form>
+      <div class="button">
+        <a href="{% url 'index' %}" style="text-decoration: none;">Home</a>
+      </div>
+      
     </div>
   </div>
 

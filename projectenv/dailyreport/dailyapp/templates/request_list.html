@@ -1,0 +1,55 @@
+{%load static%}
+<!DOCTYPE html>
+<!-- Created By CodingLab - www.codinglabweb.com -->
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8">
+    <!---<title> Responsive Registration Form | CodingLab </title>--->
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   </head>
+<body>
+  <div class="container"> 
+    <div class="title">Request List</div>
+    <br>
+        <div class="content">
+            <table border="2">
+                <thead>
+                    <tr>
+                        <th>Resource</th>
+                        <th>Details</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Requested By</th>
+                        <th colspan="2"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in rlist %}
+                        <tr>
+                            <td>{{i.resource}}</td>
+                            <td>{{i.details}}</td>
+                            <td>{{i.date}}</td>
+                            <td>{{i.time}}</td>
+                            <td>{{ i.requested_by.emp_name }}</td>
+                            <td><button><a href="{%url 'rapprove' i.id %}" style="text-decoration: none;">Approve</a></button></td>
+                            <td><button><a href="{%url 'rreject' i.id %}" style="text-decoration: none;">Reject</a></button></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div>
+                {% if messages %}
+                {% for m in messages %}
+                <p style="color:rgb(121, 185, 48);">{{m}}</p>
+                {% endfor %}
+                {% endif %}
+              </div>
+              
+        </div>
+    </div>
+    </div>
+    </div>
+  </div>
+</body>
+</html>
